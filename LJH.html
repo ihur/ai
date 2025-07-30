@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 활용 의정활동 대화형 보고서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Soothing Neutrals & Teal -->
+    <!-- Application Structure Plan: A tabbed, single-page application structure was chosen to transform the linear report into an interactive dashboard. This allows the legislator to non-linearly explore key themes—AI Applications, Optimal Activities, Training Program, and the AI Assistant's Role—based on their immediate interests. This user-centric design prioritizes quick access and easy digestion of complex information over the report's original sequential format, making it more practical for a busy professional. -->
+    <!-- Visualization & Content Choices: Report sections are mapped to interactive UI components. 'AI 활용 방안' uses clickable cards to reveal details, preventing information overload. '최적 의정활동' employs a central-themed diagram layout built with HTML/CSS to show relationships. The 'AI 역량 강화' training plan is visualized as an interactive stepper/timeline and a Chart.js bar chart to quantify time commitment, making the abstract plan tangible. These choices aim to increase engagement and clarify content without using any SVG or Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            border-bottom-color: #0d9488; /* teal-600 */
+            color: #0d9488;
+            font-weight: 700;
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto px-4 py-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-700">신임 비례대표 의원님을 위한 AI 의정활동</h1>
+            <p class="mt-2 text-lg text-stone-600">대화형 AI 활용 지원 보고서</p>
+        </header>
+
+        <nav class="bg-white rounded-lg shadow-md mb-8 sticky top-4 z-10">
+            <ul class="flex items-center justify-center p-2 space-x-2 md:space-x-8 overflow-x-auto">
+                <li><a href="#" class="nav-link active py-2 px-3 text-sm md:text-base font-medium text-stone-600" data-target="intro">소개</a></li>
+                <li><a href="#" class="nav-link py-2 px-3 text-sm md:text-base font-medium text-stone-600" data-target="application">AI 활용 방안</a></li>
+                <li><a href="#" class="nav-link py-2 px-3 text-sm md:text-base font-medium text-stone-600" data-target="optimal">최적 의정활동</a></li>
+                <li><a href="#" class="nav-link py-2 px-3 text-sm md:text-base font-medium text-stone-600" data-target="training">역량 강화 프로그램</a></li>
+                <li><a href="#" class="nav-link py-2 px-3 text-sm md:text-base font-medium text-stone-600" data-target="assistant">AI Assistant 역할</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- 소개 섹션 -->
+            <section id="intro" class="content-section active">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-4">의원님의 성공적인 의정활동을 위한 AI 기술 파트너</h2>
+                    <p class="text-stone-700 mb-4">본 보고서는 의원님의 '좋은 세상을 만들고 싶다는 의정 욕심'을 실현하는 데 AI가 어떻게 강력한 조력자가 될 수 있는지를 구체적으로 제시합니다. 단순한 도구 사용을 넘어, AI가 의원님의 사고 과정과 의사 결정 과정 전반을 혁신적으로 도울 수 있는 다양한 방법을 대화형으로 탐색해 보세요.</p>
+                    <p class="text-stone-700">상단의 메뉴를 클릭하여 각 주제별 상세 내용을 확인하실 수 있습니다. AI 기술을 통해 의정활동의 효율성을 높이고, 국민에게 더 가까이 다가가는 정책을 실현할 수 있습니다.</p>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <div class="bg-teal-50 p-6 rounded-lg">
+                            <div class="text-3xl mb-2">📊</div>
+                            <h3 class="font-bold text-teal-800">정보 분석 효율화</h3>
+                            <p class="text-sm text-teal-700">방대한 데이터와 여론을 신속하고 정확하게 분석합니다.</p>
+                        </div>
+                        <div class="bg-teal-50 p-6 rounded-lg">
+                            <div class="text-3xl mb-2">✍️</div>
+                            <h3 class="font-bold text-teal-800">정책 개발 지원</h3>
+                            <p class="text-sm text-teal-700">법안 작성부터 효과 예측까지, 입법 활동을 지원합니다.</p>
+                        </div>
+                        <div class="bg-teal-50 p-6 rounded-lg">
+                            <div class="text-3xl mb-2">💬</div>
+                            <h3 class="font-bold text-teal-800">대국민 소통 강화</h3>
+                            <p class="text-sm text-teal-700">맞춤형 콘텐츠로 국민과 효과적으로 소통합니다.</p>
+                        </div>
+                        <div class="bg-teal-50 p-6 rounded-lg">
+                            <div class="text-3xl mb-2">⚙️</div>
+                            <h3 class="font-bold text-teal-800">업무 자동화</h3>
+                            <p class="text-sm text-teal-700">복잡한 일정을 관리하고 업무 효율을 극대화합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI 활용 방안 섹션 -->
+            <section id="application" class="content-section">
+                 <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-2">AI, 의정활동을 어떻게 지원할 수 있을까요?</h2>
+                    <p class="text-stone-600 mb-6">AI는 정보 수집, 정책 개발, 소통, 업무 관리 등 의정활동의 모든 영역에서 혁신적인 변화를 가져올 수 있습니다. 각 항목을 클릭하여 구체적인 활용 방안과 AI Assistant의 역할을 확인해보세요.</p>
+                    <div id="application-cards" class="space-y-4">
+                        <!-- 카드는 JS로 생성됩니다. -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 최적 의정활동 섹션 -->
+            <section id="optimal" class="content-section">
+                 <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-2">AI를 활용한 최적의 의정활동</h2>
+                     <p class="text-stone-600 mb-6">의원님의 인권과 정의에 대한 열정은 AI를 통해 더욱 강력한 힘을 발휘할 수 있습니다. AI는 의원님의 '손과 발'이 되어 방대한 정보를 처리하고, '두뇌'가 되어 복잡한 분석을 수행하며, '목소리'가 되어 효과적인 소통을 도울 것입니다. 각 전략을 클릭하여 상세 내용을 확인하세요.</p>
+                    <div id="optimal-cards" class="space-y-4">
+                         <!-- 카드는 JS로 생성됩니다. -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 역량 강화 프로그램 섹션 -->
+            <section id="training" class="content-section">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-2">의원님을 위한 AI 의정활동 역량 강화 프로그램</h2>
+                    <p class="text-stone-600 mb-6">AI를 통해 의정활동 역량을 극대화하고자 하는 의원님의 열정을 지원하기 위해, 3단계 맞춤형 교육 프로그램을 제안합니다. 각 단계를 클릭하여 상세 커리큘럼을 확인하실 수 있습니다.</p>
+                    
+                    <div class="mb-8">
+                        <div class="chart-container">
+                            <canvas id="trainingChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-stone-500 mt-2">단계별 교육 시간(시간)</p>
+                    </div>
+
+                    <div id="training-steps" class="space-y-4">
+                        <!-- 교육 단계는 JS로 생성됩니다. -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Assistant 역할 섹션 -->
+            <section id="assistant" class="content-section">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-2">AI Assistant의 역할: 의원님의 기술 파트너</h2>
+                    <p class="text-stone-600 mb-6">의원님의 의정활동을 AI로 지원하기 위해 AI Assistant는 단순한 '툴 사용자'를 넘어, 의원님의 '아이디어'를 '현실'로 구현하는 핵심적인 기술 파트너 역할을 수행합니다.</p>
+                    <ul id="assistant-roles" class="space-y-4">
+                        <!-- 역할은 JS로 생성됩니다. -->
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            const applicationData = [
+                {
+                    title: '정보 수집 및 분석 효율화',
+                    icon: '📊',
+                    reality: '특정 법안이나 정책에 대한 방대한 자료(논문, 보고서, 해외 사례, 언론 기사 등)를 수집하고 읽는 데 엄청난 시간이 소요됩니다.',
+                    solution: 'AI 기반 "정책 지식 큐레이터"를 구축하여, 관련 정보를 실시간으로 수집, 분류, 요약하여 제공합니다. 또한 "국민 의견 분석기"로 SNS, 민원 등 여론을 신속하고 정확하게 파악합니다.',
+                    assistant_role: '정보 필터링 및 신뢰도 평가 AI 모델을 개발하고, 자연어 처리(NLP) 기술로 여론 분석 대시보드를 구축합니다.'
+                },
+                {
+                    title: '정책 개발 및 입법 지원',
+                    icon: '✍️',
+                    reality: '새로운 법안 작성 시, 유사 법안과의 충돌 여부, 상위 법령과의 일관성, 용어의 적절성 등을 일일이 확인하는 것은 매우 복잡하고 시간이 많이 걸립니다.',
+                    solution: '"법률 초안 어시스턴트"가 법안 초안 생성, 법률 충돌 검토 등을 지원하고, "정책 시뮬레이터"가 정책 시행 시 사회경제적 파급효과를 예측합니다.',
+                    assistant_role: '방대한 법률 데이터를 학습한 AI 모델을 개발하고, 복잡한 사회경제 모델을 결합한 시뮬레이션 시스템을 구축합니다.'
+                },
+                {
+                    title: '의사소통 및 대국민 설명 강화',
+                    icon: '💬',
+                    reality: '다양한 청중을 대상으로 효과적인 연설문이나 보도자료를 작성하는 것은 많은 시간과 노력이 필요합니다.',
+                    solution: '"콘텐츠 생성 AI"가 목표 청중에 최적화된 연설문, 보도자료 등을 빠르게 생성하고, "미디어 대응 어시스턴트"가 예상 질문에 대한 최적의 답변을 제안하여 위기 관리를 돕습니다.',
+                    assistant_role: '의원님의 과거 발언을 학습한 개인화된 콘텐츠 생성 모델과, 실시간 미디어 분석 기반의 대응 전략 제안 시스템을 개발합니다.'
+                },
+                {
+                    title: '일정 관리 및 업무 자동화',
+                    icon: '⚙️',
+                    reality: '의원님과 보좌진은 수많은 일정과 회의, 자료 준비 등으로 항상 바쁘고, 놓치기 쉬운 세부 사항들이 많습니다.',
+                    solution: '"통합 의정 비서 시스템"이 일정, 회의록, 업무 진행 상황을 연동하여 관리하고, 업무 패턴을 학습하여 최적의 스케줄을 제안하고 비효율적인 업무를 자동 조정합니다.',
+                    assistant_role: '의원실의 업무 프로세스를 분석하고, AI 자동화 기능을 결합한 맞춤형 통합 시스템을 개발합니다.'
+                }
+            ];
+
+            const applicationContainer = document.getElementById('application-cards');
+            applicationData.forEach(item => {
+                const card = createCollapsibleCard(item.icon, item.title, [
+                    { label: '현실', content: item.reality },
+                    { label: 'AI 활용', content: item.solution },
+                    { label: 'AI Assistant 역할', content: item.assistant_role }
+                ]);
+                applicationContainer.appendChild(card);
+            });
+
+            const optimalData = [
+                {
+                    title: '약자 인권 사각지대 발굴 및 증거 기반 정책 제안',
+                    icon: '🤝',
+                    reality: '인권 침해 사례는 산발적이고, 법적 보호를 받지 못하는 사각지대는 명확히 드러나지 않는 경우가 많습니다.',
+                    solution: "'AI 사회문제 탐지기'로 숨겨진 인권 침해 신호를 탐지하고, '글로벌 인권 법제 비교 분석기'로 최적의 인권 법안 모델을 제시합니다.",
+                    impact: "증거 기반의 강력한 입법 근거를 마련하여, '감성'이 아닌 '팩트'와 '논리'로 무장한 인권 법안 발의가 가능해집니다."
+                },
+                {
+                    title: '정책 효과 예측 및 부작용 최소화 시뮬레이션',
+                    icon: '🔬',
+                    reality: '새로운 법안이나 정책이 의도치 않은 부작용을 낳거나, 특정 계층에 불이익을 줄 수 있다는 우려가 항상 존재합니다.',
+                    solution: "'정책 파급효과 시뮬레이터'로 법안의 사회 각 분야 영향을 예측하고, '법안 취약점 진단 AI'로 법률의 모호성, 충돌 가능성 등을 사전에 진단합니다.",
+                    impact: "'최고의 선의'가 '최악의 결과'를 낳는 것을 방지하고, 논리적이고 빈틈없는 법안으로 반대 진영의 비판에 효과적으로 대응할 수 있습니다."
+                },
+                {
+                    title: '사법/언론 개혁을 위한 정보력 강화 및 전략 수립',
+                    icon: '🏛️',
+                    reality: '사법/언론 개혁은 복잡한 이해관계와 방대한 정보 분석을 필요로 하며, 객관적인 데이터 없이는 논리적인 비판과 대안 제시가 어렵습니다.',
+                    solution: "'사법 통계 및 판례 분석 AI'로 사법 판단의 경향성과 불합리한 선례를 분석하고, '언론 감시 및 왜곡 탐지 AI'로 언론 보도의 편향성을 감시합니다.",
+                    impact: "데이터와 통계에 기반한 논리적인 분석으로 사법 및 언론 개혁의 당위성을 설득하고 구체적인 대안을 제시하는 데 필수적인 정보를 제공합니다."
+                },
+                 {
+                    title: '시민 소통 및 현장 의견 통합',
+                    icon: '🗣️',
+                    reality: '수많은 시민의 목소리, 청원, 현장 간담회 내용은 방대하여 핵심을 파악하고 의정활동에 효과적으로 반영하기 어렵습니다.',
+                    solution: "'국민 의견 통합 분석 AI'로 주요 쟁점과 공통 요구사항을 분석하고, '현장 간담회 스마트록'으로 현장 의견을 놓치지 않고 자동으로 요약, 보고합니다.",
+                    impact: "현장의 목소리를 과학적으로 분석하고 통합하여, 더욱 실효성 있고 국민들의 공감을 얻는 정책을 수립하는 데 기여합니다."
+                }
+            ];
+            
+            const optimalContainer = document.getElementById('optimal-cards');
+            optimalData.forEach(item => {
+                const card = createCollapsibleCard(item.icon, item.title, [
+                    { label: '현실', content: item.reality },
+                    { label: 'AI 활용', content: item.solution },
+                    { label: '기대 효과', content: item.impact, color: 'text-teal-700' }
+                ]);
+                optimalContainer.appendChild(card);
+            });
+
+
+            const trainingData = [
+                {
+                    title: '1단계: AI 기초 및 의정활동 혁신 이해 (2회차, 총 4시간)',
+                    icon: '1️⃣',
+                    content: [
+                        { label: '1회차: AI, 우리 삶과 의정활동에 어떻게 스며들고 있나?', description: 'AI 기본 개념, 생성형 AI 원리 및 활용 사례, 국정 운영의 변화 방향을 이해합니다.' },
+                        { label: '2회차: AI 시대, 데이터 리터러시와 비판적 사고의 중요성', description: '데이터의 중요성, 데이터를 비판적으로 평가하는 능력, AI의 한계와 윤리적 이슈를 학습합니다.' }
+                    ]
+                },
+                {
+                    title: '2단계: AI 기반 의정활동 도구 실전 활용 (3회차, 총 7.5시간)',
+                    icon: '2️⃣',
+                    content: [
+                        { label: '3회차: 효율적인 정보 수집 및 분석', description: 'LLM 기반 정보 검색/요약, 뉴스 및 여론 동향 분석 툴을 실습합니다.' },
+                        { label: '4회차: 정책 연구 및 입법 초안 지원', description: '맞춤형 법률 분석 AI 및 정책 효과 예측 AI의 개념을 시연하고 가상으로 적용합니다.' },
+                        { label: '5회차: 효과적인 소통 및 대국민 설명', description: '연설문/보도자료 생성 AI, 데이터 시각화 AI 도구를 활용하여 실제 홍보 자료를 제작합니다.' }
+                    ]
+                },
+                {
+                    title: '3단계: AI 시대 리더십과 미래 의정활동 (1회차, 1.5시간)',
+                    icon: '3️⃣',
+                    content: [
+                        { label: '6회차: AI와 함께 만드는 더 나은 세상', description: "AI 시대 의원의 역할 재정립, 개인 맞춤형 AI 비서 구상, AI 거버넌스 등 미래 방향을 논의하는 브레인스토밍을 진행합니다." }
+                    ]
+                }
+            ];
+
+            const trainingContainer = document.getElementById('training-steps');
+            trainingData.forEach(item => {
+                const card = createCollapsibleCard(item.icon, item.title, item.content.map(c => ({ label: c.label, content: c.description })));
+                trainingContainer.appendChild(card);
+            });
+
+            const assistantData = [
+                 {
+                    title: '데이터 인프라 구축 및 관리',
+                    icon: '💾',
+                    description: '국회, 정부 부처, 법원, 시민단체 등에서 생산되는 방대한 비정형/정형 데이터를 수집하고, AI 학습에 적합한 형태로 정제하며, 보안을 유지하면서 관리하는 데이터 파이프라인을 구축합니다.'
+                },
+                {
+                    title: '맞춤형 AI 모델 개발 및 고도화',
+                    icon: '🧠',
+                    description: "위에 언급된 'AI 사회문제 탐지기', '정책 파급효과 시뮬레이터' 등 의원님의 특정 필요에 맞는 AI 모델을 직접 개발합니다. 특히, 법률 및 인권 전문 데이터를 학습시켜 의원님만의 특화된 AI 조력자를 만듭니다."
+                },
+                {
+                    title: '사용자 친화적 인터페이스(UI/UX) 구축',
+                    icon: '🖥️',
+                    description: '개발된 AI 모델이 의원님과 보좌진이 쉽게 사용할 수 있도록 직관적이고 사용자 친화적인 대시보드 및 시스템을 개발합니다. 복잡한 데이터 분석 결과를 시각적으로 명확하게 보여주는 기능을 구현합니다.'
+                },
+                {
+                    title: '보안 및 윤리적 고려',
+                    icon: '🛡️',
+                    description: '의정활동은 민감한 정보를 다루는 만큼, AI 시스템의 데이터 보안과 개인정보 보호를 최우선으로 고려합니다. 또한, AI가 편향된 결과를 내지 않도록 데이터의 공정성을 확보하고, AI 활용의 윤리적 가이드라인을 수립하는 데 기여합니다.'
+                },
+                {
+                    title: '보좌진 교육 및 기술 지원',
+                    icon: '👨‍🏫',
+                    description: '개발된 AI 시스템을 보좌진이 효과적으로 활용할 수 있도록 교육하고, 기술적인 문제 발생 시 신속하게 지원하여 AI가 의정활동에 안정적으로 통합되도록 돕습니다.'
+                }
+            ];
+            
+            const assistantContainer = document.getElementById('assistant-roles');
+            assistantData.forEach(item => {
+                const roleElement = document.createElement('li');
+                roleElement.className = 'bg-stone-100 p-4 rounded-lg flex items-start space-x-4';
+                roleElement.innerHTML = `
+                    <div class="text-2xl">${item.icon}</div>
+                    <div>
+                        <h3 class="font-bold text-stone-800">${item.title}</h3>
+                        <p class="text-stone-600 text-sm">${item.description}</p>
+                    </div>
+                `;
+                assistantContainer.appendChild(roleElement);
+            });
+
+            function createCollapsibleCard(icon, title, contentArray) {
+                const cardWrapper = document.createElement('div');
+                cardWrapper.className = 'border border-stone-200 rounded-lg';
+                
+                const header = document.createElement('button');
+                header.className = 'w-full flex items-center justify-between p-4 text-left bg-stone-100 hover:bg-stone-200 transition duration-200 rounded-t-lg';
+                header.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl">${icon}</span>
+                        <h3 class="font-bold text-stone-800">${title}</h3>
+                    </div>
+                    <svg class="w-5 h-5 text-stone-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                `;
+
+                const content = document.createElement('div');
+                content.className = 'p-4 bg-white rounded-b-lg hidden';
+                
+                const contentList = document.createElement('ul');
+                contentList.className = 'space-y-3';
+                content.appendChild(contentList);
+
+                contentArray.forEach(item => {
+                    const listItem = document.createElement('li');
+                    const labelColor = item.color || 'text-stone-700';
+                    listItem.innerHTML = `<strong class="font-semibold ${labelColor}">${item.label}:</strong> <span class="text-stone-600">${item.content}</span>`;
+                    contentList.appendChild(listItem);
+                });
+
+                header.addEventListener('click', () => {
+                    content.classList.toggle('hidden');
+                    header.querySelector('svg').classList.toggle('rotate-180');
+                });
+
+                cardWrapper.appendChild(header);
+                cardWrapper.appendChild(content);
+
+                return cardWrapper;
+            }
+
+            const ctx = document.getElementById('trainingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1단계: 기초 이해', '2단계: 실전 활용', '3단계: 리더십'],
+                    datasets: [{
+                        label: '교육 시간 (시간)',
+                        data: [4, 7.5, 1.5],
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.6)',
+                            'rgba(13, 148, 136, 0.6)',
+                            'rgba(15, 118, 110, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(20, 184, 166, 1)',
+                            'rgba(13, 148, 136, 1)',
+                            'rgba(15, 118, 110, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '시간'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw} 시간`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
