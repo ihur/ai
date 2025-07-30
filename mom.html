@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI, 복음의 통로가 되다!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide h1 {
+            font-size: 3.5em;
+            color: #4a5568;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide h2 {
+            font-size: 2.8em;
+            color: #2d3748;
+            margin-bottom: 40px;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            font-size: 2.2em;
+            color: #4a5568;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.4em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            max-width: 900px;
+            color: #2d3748;
+        }
+
+        .slide ul {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .slide li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .slide li::before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            font-weight: bold;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.6em;
+            color: #667eea;
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .quote::before {
+            content: '"';
+            font-size: 4em;
+            color: #667eea;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #4a5568;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+            align-items: start;
+            /* 추가할 부분 */
+            justify-items: center; /* 그리드 아이템들을 수평 가운데 정렬 */
+            text-align: center; /* 그리드 아이템 내부 텍스트를 가운데 정렬 */
+        }
+
+        .demo-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px dashed #667eea;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ff6b6b;
+            margin: 20px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide.active {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .slide h1 { font-size: 2.5em; }
+            .slide h2 { font-size: 2em; }
+            .slide h3 { font-size: 1.8em; }
+            .slide p, .slide li { font-size: 1.2em; }
+            .slide { padding: 20px; }
+            .two-column { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">11</span>
+        </div>
+
+        <!-- 슬라이드 1: 제목 -->
+        <div class="slide active">
+            <div class="icon">🤖✨</div>
+            <h1>AI, 복음의 통로가 되다!</h1>
+            <p style="font-size: 1.8em; color: #667eea; margin-top: 40px;">
+                인공지능을 활용한 효과적인 복음전도
+            </p>
+            <p style="font-size: 1.3em; color: #718096; margin-top: 20px;">
+                새로운 시대, 새로운 도구로 하나님의 사랑을 전하는 방법
+            </p>
+        </div>
+
+        <!-- 슬라이드 2: AI에 대한 긍정적 인식 -->
+        <div class="slide">
+            <h2>🏺 AI, 복음을 담는 그릇</h2>
+            <div class="quote">
+                옛날에는 손으로 성경을 필사했지만, 지금은 인쇄술 덕분에 많은 사람이 성경을 읽을 수 있게 되었죠? AI도 이처럼 복음을 더 널리 전하는 새로운 도구가 될 수 있습니다.
+            </div>
+            <div class="highlight">
+                <p><strong>AI는 어려운 기술이 아닙니다!</strong></p>
+                <p>복음을 더 효과적으로 전할 수 있도록 돕는 <strong>하나님이 주신 도구</strong>입니다.</p>
+            </div>
+        </div>
+
+        <!-- 슬라이드 3: AI와 복음의 연결고리 -->
+        <div class="slide">
+            <h2>🌉 AI와 복음의 연결고리</h2>
+            <div class="two-column">
+                <div>
+                    <h3>🤝 주변 사람들에게 더 쉽게 다가가기!</h3>
+                    <p>번역과 소통의 도구로 활용</p>
+                </div>
+                <div>
+                    <h3>✨ 개인의 간증을 더 풍성하게!</h3>
+                    <p>AI가 도와주는 간증문 작성과 정리</p>
+                </div>
+            </div>
+            <div class="two-column" style="margin-top: 40px;">
+                <div>
+                    <h3>📖 성경 말씀을 더 깊이 이해하기!</h3>
+                    <p>음성 검색과 스마트한 성경 공부</p>
+                </div>
+                <div>
+                    <h3>🎨 마음을 여는 예쁜 이미지 만들기!</h3>
+                    <p>아름다운 글과 성구가 포함된 이미지 생성</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 4: 스마트폰 활용 소개 -->
+        <div class="slide">
+            <h2>📱 내 손 안의 AI 전도 도구</h2>
+            <div class="icon">📲</div>
+            <div class="highlight">
+                <p><strong>성도님들이 가장 친숙한 스마트폰을 중심으로!</strong></p>
+                <p>이미 우리 손 안에 있는 놀라운 전도 도구들을 발견해보세요</p>
+            </div>
+            <ul>
+                <li>음성 인식으로 성경 구절 찾기</li>
+                <li>번역 AI로 외국인 친구에게 복음 전하기</li>
+                <li>쉽고 간편한 활용법</li>
+            </ul>
+        </div>
+
+        <!-- 슬라이드 5: 음성 인식 기능 -->
+        <div class="slide">
+            <h2>🎤 음성 인식으로 성경 구절 찾기</h2>
+            <div class="demo-box">
+                <h3>👩‍🏫 실습해보세요!</h3>
+                <p>아이폰: <strong>"헤이 시리"</strong> 부르고<br>
+                    갤럭시: <strong>"gemini"</strong>를 켜서 마이크 버튼을 누르고</p>
+                <p style="font-size: 1.6em; color: #667eea; font-weight: bold;">
+                    "요한복음 3장 16절 찾아줘"
+                </p>
+                <p>라고 말해보세요!</p>
+            </div>
+            <div class="highlight">
+                <strong>전도 활용 아이디어:</strong><br>
+                전도 대상자와 이야기 중 성경 구절이 필요할 때 바로 찾아 보여주세요!
+            </div>
+        </div>
+
+        <!-- 슬라이드 6: 번역 AI 활용 -->
+        <div class="slide">
+            <h2>🌍 번역 AI로 외국인 친구에게 복음 전하기</h2>
+            <div class="quote">
+                혹시 외국인 친구에게 복음을 전하고 싶은데 말이 통하지 않아서 망설이셨나요? 이제 AI가 도와줄 수 있어요!
+            </div>
+            <div class="two-column">
+                <div>
+                    <h3>📱 간단한 번역 앱 활용</h3>
+                    <ul>
+                        <li>구글 번역</li>
+                        <li>파파고</li>
+                        <li>카카오 번역</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>💬 활용 방법</h3>
+                    <ul>
+                        <li>성경 구절 번역</li>
+                        <li>간단한 복음 메시지</li>
+                        <li>음성 번역 기능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 7: 간증문 작성 도우미 -->
+        <div class="slide">
+            <h2>✍️ 간증문 작성 도우미 AI</h2>
+            <div class="quote">
+                내 간증을 글로 쓰고 싶은데 어떻게 시작해야 할지 막막할 때가 있죠? AI가 좋은 아이디어를 줄 수 있습니다.
+            </div>
+            <div class="two-column">
+                <div>
+                    <h3>❌ 이렇게 하지 마세요</h3>
+                    <p style="color: #e53e3e;">"내 50년 신앙생활 간증문을 써줘"</p>
+                </div>
+                <div>
+                    <h3>✅ 이렇게 해보세요</h3>
+                    <ul>
+                        <li>"나의 신앙 간증을 300자 내외로 요약해 줘"</li>
+                        <li>"내 간증문 초고를 읽고 더 감동적으로 다듬어 줘"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 8: AI 활용 주의사항 -->
+        <div class="slide">
+            <h2>⚠️ 간증문 작성 시 중요한 점</h2>
+            <div class="warning-box">
+                <h3>🎯 핵심 원칙</h3>
+                <p><strong>AI가 쓴 그대로 사용하는 것보다, 내가 직접 내용을 확인하고 수정해서 '나만의 간증'으로 만드는 것이 중요합니다!</strong></p>
+            </div>
+            <ul>
+                <li>AI는 초고를 작성하거나 문장을 다듬는 데 도움을 줄 뿐</li>
+                <li>진실된 나의 경험과 감정을 담아야 함</li>
+                <li>성경 말씀과 교회의 가르침에 맞는지 확인</li>
+                <li>개인적이고 진솔한 이야기가 가장 감동적</li>
+            </ul>
+        </div>
+
+        <!-- 슬라이드 9: 이미지 생성 AI -->
+        <div class="slide">
+            <h2>🎨 카드 뉴스/이미지 생성 AI</h2>
+            <div class="icon">🖼️</div>
+            <div class="quote">
+                아름다운 성경 구절 이미지를 만들어서 주변 사람들과 나누고 싶을 때, AI의 도움을 받을 수 있습니다.
+            </div>
+            <div class="highlight">
+                <h3>💡 활용 아이디어</h3>
+                <ul>
+                    <li>전도용 카드뉴스 제작</li>
+                    <li>성경 구절이 담긴 아름다운 이미지</li>
+                    <li>SNS 공유용 복음 콘텐츠</li>
+                    <li>교회 행사 홍보 자료</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 슬라이드 10: AI 시대 우리의 자세 -->
+        <div class="slide">
+            <h2>🙏 AI 시대, 우리의 자세</h2>
+            <div class="two-column">
+                <div>
+                    <h3>🔧 AI는 도구일 뿐</h3>
+                    <p>가장 중요한 것은 <strong>성도님들의 진실된 마음과 사랑</strong>입니다</p>
+                </div>
+                <div>
+                    <h3>⚖️ 분별력의 중요성</h3>
+                    <p>AI 정보는 반드시 <strong>성경 말씀과 교회 가르침</strong>에 비추어 분별해야 합니다</p>
+                </div>
+            </div>
+            <div class="quote">
+                AI는 기술적인 부분을 도와줄 뿐, 사람의 마음을 움직이는 것은 오직 성령님의 역사입니다. 우리는 AI를 통해 복음의 씨앗을 뿌리지만, 열매 맺게 하시는 분은 하나님이심을 기억해야 합니다.
+            </div>
+        </div>
+
+        <!-- 슬라이드 11: 마무리 및 질의응답 -->
+        <div class="slide">
+            <h2>💬 질의응답 시간</h2>
+            <div class="icon">🙋‍♀️🙋‍♂️</div>
+            <div class="highlight">
+                <h3>🎯 오늘 배운 내용 정리</h3>
+                <ul>
+                    <li>AI는 복음을 전하는 새로운 도구</li>
+                    <li>스마트폰의 음성 인식과 번역 기능 활용</li>
+                    <li>간증문 작성과 이미지 제작에 AI 도움받기</li>
+                    <li>분별력을 가지고 하나님 중심으로 사용하기</li>
+                </ul>
+            </div>
+            <p style="font-size: 1.6em; margin-top: 40px; color: #667eea;">
+                궁금한 점이나 더 알고 싶은 내용이 있으시면 언제든 질문해 주세요! 🙏
+            </p>
+        </div>
+
+        <!-- 네비게이션 -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← 이전</button>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">다음 →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // 키보드 네비게이션
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // 초기 상태 설정
+        showSlide(0);
+    </script>
+</body>
+</html>
